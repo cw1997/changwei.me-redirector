@@ -1,8 +1,12 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "outDir": "./dist/esm",
     "incremental": true,
@@ -10,9 +14,6 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*"
