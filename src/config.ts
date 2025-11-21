@@ -16,6 +16,6 @@ export const REDIRECT_MAP = {
     'qqmail': 'mailto:changwei1006@qq.com',
     'tg': 'https://t.me/changwei1006',
     'telegram': 'https://t.me/changwei1006',
-};
+} as const;
 
 export const FALLBACK_URL = 'https://www.changwei.me';

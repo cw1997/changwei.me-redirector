@@ -47,7 +47,7 @@ fastify.get('/', async function handler (req, res) {
 
   const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
 
-  const targetUrl = REDIRECT_MAP[subdomain] ?? FALLBACK_URL;
+  const targetUrl = REDIRECT_MAP[subdomain as keyof typeof REDIRECT_MAP] ?? FALLBACK_URL;
 
   res.redirect(targetUrl)
 
