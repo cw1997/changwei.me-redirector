@@ -25,6 +25,10 @@ const poolConnection = mysql.createPool({
 });
 const db = drizzle({ client: poolConnection });
 
+/*const result = await db.execute(`SELECT version()`)
+console.log({result})
+process.exit(0)*/
+
 const server = http.createServer(async (req, res) => {
     if (req.url === '/favicon.ico') {
         res.statusCode = 404;

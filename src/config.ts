@@ -18,4 +18,4 @@ export const REDIRECT_MAP = {
     'telegram': 'https://t.me/changwei1006',
 };
 
-export const FALLBACK_URL = 'https://www.changwei.com';
+export const FALLBACK_URL = 'https://www.changwei.me';
