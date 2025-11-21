@@ -4,9 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "start": "tsx src/main.ts",
-    "dev": "tsx --watch src/main.ts",
-    "build": "tsc",
+    "start": "tsx src/server.ts",
+    "dev": "tsx --watch src/server.ts",
+    "verify": "tsc --noEmit",
     "drizzle:push": "drizzle-kit push --config=src/drizzle.config.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
