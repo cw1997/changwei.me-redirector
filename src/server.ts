@@ -1,10 +1,10 @@
 import Fastify from 'fastify'
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import {FALLBACK_URL, REDIRECT_MAP} from "@/config";
-import {redirect_log} from "@/db/schema";
+import {FALLBACK_URL, REDIRECT_MAP} from "@/config.js";
+import {redirect_log} from "@/db/schema.js";
 import 'dotenv/config';
-import {fetchFile} from "@/utils";
+import {fetchFile} from "@/utils.js";
 
 const ca = await fetchFile("https://letsencrypt.org/certs/isrgrootx1.pem")
 

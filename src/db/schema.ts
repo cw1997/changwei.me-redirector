@@ -1,5 +1,5 @@
 import {mysqlTable, int, varchar, datetime, json} from "drizzle-orm/mysql-core"
-import {REDIRECT_MAP} from "@/config";
+import {REDIRECT_MAP} from "@/config.js";
 import {sql} from "drizzle-orm";
 
 export const redirect_log = mysqlTable('redirect_log', {
