@@ -1,10 +1,10 @@
 import Fastify from 'fastify'
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import {FALLBACK_URL, REDIRECT_MAP} from "@/config.js";
-import {redirect_log} from "@/db/schema.js";
+import {FALLBACK_URL, REDIRECT_MAP} from "./config.js";
+import {redirect_log} from "./db/schema.js";
 import 'dotenv/config';
-import {fetchFile} from "@/utils.js";
+import {fetchFile} from "./utils.js";
 
 const ca = await fetchFile("https://letsencrypt.org/certs/isrgrootx1.pem")
 
@@ -62,5 +62,10 @@ fastify.get('/', async function handler (req, res) {
   console.log(`[LOGGED] Inserted ID: ${result_insert[0].insertId}`);
 })
 
-fastify.listen({ port: 3000 })
-
+fastify.listen({ port: +(process.env.PORT ?? 3000), host: process.env.HOST ?? '0.0.0.0', }, function (err, address) {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+  fastify.log.info(`server listening on ${address}`)
+})
