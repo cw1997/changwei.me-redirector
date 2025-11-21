@@ -57,7 +57,7 @@ fastify.get('/', async function handler (req, res) {
     source: sourceUrl,
     destin: targetUrl,
     ip: ip as string,
-    headers: JSON.stringify(req.headers),
+    headers: req.headers,
   });
   console.log(`[LOGGED] Inserted ID: ${result_insert[0].insertId}`);
 })
