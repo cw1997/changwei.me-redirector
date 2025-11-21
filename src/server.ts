@@ -1,4 +1,4 @@
-import * as http from 'node:http';
+import Fastify from 'fastify'
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import {FALLBACK_URL, REDIRECT_MAP} from "@/config";
@@ -29,56 +29,38 @@ const db = drizzle({ client: poolConnection });
 console.log({result})
 process.exit(0)*/
 
-const server = http.createServer(async (req, res) => {
-    if (req.url === '/favicon.ico') {
-        res.statusCode = 404;
-        res.end();
-        return;
-    }
+const fastify = Fastify({ logger: true })
 
-    try {
-        const rawHost = req.headers.host ?? '';
-        const hostname = rawHost.split(':')[0];
-        const subdomain = hostname.split('.')[0];
+// Declare a route
+fastify.get('/', async function handler (req, res) {
+  if (req.url === '/favicon.ico') {
+    res.statusCode = 404;
+    res.send();
+    return;
+  }
+  const rawHost = req.headers.host ?? '';
+  const hostname = rawHost.split(':')[0];
+  const subdomain = hostname.split('.')[0];
 
-        const protocol = req.headers['x-forwarded-proto'] ?? 'http';
-        const sourceUrl = `${protocol}://${rawHost}${req.url}`;
+  const protocol = req.headers['x-forwarded-proto'] ?? 'http';
+  const sourceUrl = `${protocol}://${rawHost}${req.url}`;
 
-        const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
+  const ip = req.headers['x-forwarded-for'] ?? req.socket.remoteAddress;
 
-        const targetUrl = REDIRECT_MAP[subdomain] ?? FALLBACK_URL;
+  const targetUrl = REDIRECT_MAP[subdomain] ?? FALLBACK_URL;
 
-        res.writeHead(302, {
-            'Location': targetUrl,
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Expires': '0'
-        });
-        res.end();
+  res.redirect(targetUrl)
 
-        console.log(`[REDIRECT] ${subdomain} -> ${targetUrl}`);
+  console.log(`[REDIRECT] ${subdomain} -> ${targetUrl}`);
 
-        const result_insert = await db.insert(redirect_log).values({
-          source: sourceUrl,
-          destin: targetUrl,
-          ip: ip as string,
-          headers: JSON.stringify(req.headers),
-        });
-        console.log(`[LOGGED] Inserted ID: ${result_insert[0].insertId}`);
+  const result_insert = await db.insert(redirect_log).values({
+    source: sourceUrl,
+    destin: targetUrl,
+    ip: ip as string,
+    headers: JSON.stringify(req.headers),
+  });
+  console.log(`[LOGGED] Inserted ID: ${result_insert[0].insertId}`);
+})
 
-    } catch (error) {
-        console.error('Server Internal Error:', error);
-        res.writeHead(500);
-        res.end('Internal Server Error');
-    }
-});
+fastify.listen({ port: 3000 })
 
-process.on('SIGINT', async () => {
-    console.log('\nClosing database connection...');
-    process.exit(0);
-});
-
-const PORT = +(process.env.PORT ?? 80);
-const HOSTNAME = process.env.HOSTNAME ?? "0.0.0.0";
-server.listen(PORT, HOSTNAME, () => {
-    console.log(`changwei.me Redirect Service running on port ${PORT}`);
-});
